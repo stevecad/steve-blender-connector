@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Blender</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <span class="mark">B</span>
+        <div>
+          <h1>Blender</h1>
+          <p>Parts, assemblies & motion</p>
+        </div>
+        <span id="connection" class="badge">Connecting</span>
+      </header>
+      <section>
+        <p class="eyebrow">LIVE SCENE</p>
+        <h2 id="scene">Waiting for Blender</h2>
+        <p id="stats" class="muted">Open Blender with the MCP extension enabled.</p>
+        <button id="refresh" disabled>Refresh status</button>
+      </section>
+      <section>
+        <p class="eyebrow">INSERT FROM STEVE</p>
+        <p id="document" class="muted">Open a part or design in STEVE.</p>
+        <label for="destination">Destination</label
+        ><select id="destination">
+          <option value="current">Current Blender scene</option>
+          <option value="new">New Blender scene</option>
+        </select>
+        <label for="scene-name">New scene name <span class="muted">(optional)</span></label
+        ><input id="scene-name" maxlength="100" placeholder="Use the model name" disabled />
+        <p class="hint">
+          Creates a separate collection. Keeps existing scene objects and the model’s placement and
+          size.
+        </p>
+        <details>
+          <summary>Include STEVE animation</summary>
+          <p class="hint">
+            3MF contains geometry only. Ask your agent to send the motion metadata, or paste its
+            JSON here. Document and revision must match. Revolute, slider, rigid joints and
+            couplings are supported.
+          </p>
+          <label for="motion">Motion JSON</label
+          ><textarea
+            id="motion"
+            rows="6"
+            spellcheck="false"
+            placeholder='{"document_id":"…","revision":1,"kinematics":{…},"clip":"open_close"}'
+          ></textarea
+          ><label for="frame">Start frame</label
+          ><input id="frame" type="number" min="1" max="100000" value="1" />
+          <p class="hint">
+            For drives, cylindrical joints or exploded views, export Animated GLB in STEVE and use
+            the connector’s local import command.
+          </p>
+        </details>
+        <button id="insert" class="primary" disabled>Insert into Blender</button>
+      </section>
+      <section>
+        <p class="eyebrow">LOCAL FILE</p>
+        <p class="hint">
+          Save a unique .blend copy of all scenes in the connector’s data/exports folder.
+        </p>
+        <button id="save" disabled>Save Blender copy</button>
+      </section>
+      <section aria-live="polite">
+        <p id="message">Loading connector…</p>
+        <progress id="progress" max="1" value="0" hidden></progress>
+        <pre id="result"></pre>
+      </section>
+      <footer>steve-blender-connector · 0.1.2</footer>
+    </main>
+    <script src="panel.js"></script>
+  </body>
+</html>

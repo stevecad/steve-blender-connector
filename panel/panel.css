@@ -1,0 +1,163 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f5f5f3;
+  --card: #fff;
+  --text: #202421;
+  --muted: #69716a;
+  --line: #dce0db;
+  --accent: #df6b22;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font:
+    14px/1.5 system-ui,
+    sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+body[data-theme='dark'] {
+  --bg: #181c1b;
+  --card: #222725;
+  --text: #e5eae7;
+  --muted: #a2aea7;
+  --line: #3a433e;
+}
+main {
+  padding: 16px;
+  max-width: 600px;
+  margin: auto;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 20px;
+}
+.mark {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent);
+}
+h1 {
+  font-size: 21px;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+h2 {
+  font-size: 18px;
+  margin: 4px 0;
+  overflow-wrap: anywhere;
+}
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.badge {
+  margin-left: auto;
+  font-size: 11px;
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.badge.online {
+  color: #47a778;
+}
+section {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.muted,
+.hint {
+  color: var(--muted);
+}
+.hint {
+  font-size: 12px;
+}
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 12px 0 5px;
+}
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  padding: 9px;
+  width: 100%;
+}
+textarea {
+  font:
+    11px/1.5 ui-monospace,
+    monospace;
+  resize: vertical;
+}
+button {
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 8px;
+}
+button.primary {
+  background: var(--accent);
+  color: white;
+  border: 0;
+  padding: 12px;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+details {
+  margin: 16px 0;
+  font-size: 12px;
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  max-height: 280px;
+  overflow: auto;
+}
+progress {
+  width: 100%;
+  accent-color: var(--accent);
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 10px;
+  padding: 10px;
+}
+#message {
+  margin: 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

@@ -1,0 +1,11 @@
+steve-blender-connector adapts the STEVE protocol client, durable run loop,
+panel builder/bridge and macOS service launcher from steve-prusa-connector,
+itself adapted from stevecad/steve-bambu-connector:
+https://github.com/stevecad/steve-bambu-connector
+Reference commit: a674fbdd977bf9f87461a827d33bc39831252d44
+
+The upstream MIT license and copyright notice are retained in LICENSE.
+The bounded ZIP and 3MF reader derives from the local Prusa connector.
+Blender transport, import adapter, motion baking and Blender panel are added here.
+Blender and the Blender Lab MCP extension are installed separately and are not
+distributed here. This project is not endorsed by Blender Foundation.

@@ -1,0 +1,9 @@
+node_modules/
+data*/
+artifacts/
+dist/
+config.json
+config.*.json
+!config.example.json
+*.pem
+*.key

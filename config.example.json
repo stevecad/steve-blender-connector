@@ -1,0 +1,6 @@
+{
+  "name": "steve-blender-connector",
+  "steve_url": "https://stevecad.studio/connect/v1",
+  "blender": { "host": "127.0.0.1", "port": 9876, "timeout_ms": 120000 },
+  "panel": { "name": "blender", "title": "Blender", "placement": ["right"] }
+}
