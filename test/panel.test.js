@@ -81,3 +81,45 @@ test('terminal update received before the RPC reply is retained for the correct 
   assert.equal(p.get('insert').disabled, false);
   assert.match(p.get('result').textContent, /2/);
 });
+async function finishImport(p, result, state = 'succeeded') {
+  p.get('insert').click();
+  const rpc = p.sent.at(-1);
+  p.deliver({ id: rpc.id, result: { id: 'import-result', state, result } });
+  await p.tick();
+}
+test('geometry-only status appears beside the imported collection name', async () => {
+  const p = await panel();
+  await finishImport(p, {
+    collection: 'STEVE · Test assembly',
+    animation_imported: false,
+    geometry_source: '3mf',
+    motion_source: 'none',
+    motion_summary:
+      'Geometry only. 3MF contains no animation; no STEVE motion payload was supplied.',
+  });
+  assert.equal(p.get('import-summary').hidden, false);
+  assert.equal(p.get('import-collection').textContent, 'STEVE · Test assembly');
+  assert.equal(p.get('import-motion').textContent, 'Geometry only');
+  assert.match(p.get('import-detail').textContent, /no STEVE motion payload/);
+});
+test('motion status shows the source, clip and frame range', async () => {
+  const p = await panel();
+  await finishImport(p, {
+    collection: 'STEVE · Moving assembly',
+    animation_imported: true,
+    motion_source: 'steve_payload',
+    motion_summary: 'STEVE motion payload imported: open_close (frames 1–217).',
+  });
+  assert.equal(p.get('import-motion').textContent, 'Motion imported');
+  assert.match(p.get('import-detail').textContent, /open_close.*1–217/);
+});
+test('missing legacy metadata is shown as unknown rather than geometry-only', async () => {
+  const p = await panel();
+  await finishImport(p, { collection: 'Older connector' });
+  assert.equal(p.get('import-motion').textContent, 'Motion status unavailable');
+});
+test('failed imports do not show a success result card', async () => {
+  const p = await panel();
+  await finishImport(p, { collection: 'Failed import', animation_imported: true }, 'failed');
+  assert.equal(p.get('import-summary').hidden, true);
+});

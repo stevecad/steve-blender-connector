@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Show geometry-only or imported-motion status beside the new collection in the panel, with its source, clip and frame range.
+- Persist motion import status on Blender collections and return explicit geometry and motion provenance in action results.
+
 ## 0.1.2 — 2026-10-18
 
 First public release.

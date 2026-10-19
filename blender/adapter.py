@@ -25,6 +25,15 @@ def collection_for(import_id):
     return matches[0]
 
 
+def record_motion_status(collection, imported, source, summary):
+    collection['steve_animation_imported'] = bool(imported)
+    collection['steve_motion_source'] = source
+    collection['steve_motion_summary'] = summary
+    return {'animation_imported': bool(imported),
+            'geometry_source': collection['steve_source_format'],
+            'motion_source': source, 'motion_summary': summary}
+
+
 def bounds(objects, unit_scale=1):
     points = [o.matrix_world @ Vector(v) for o in objects if o.type == 'MESH' for v in o.bound_box]
     if not points:
@@ -145,6 +154,7 @@ def import_model(p):
         if not any(o.type == 'MESH' for o in objects):
             raise ValueError('Import contains no mesh objects')
         bpy.context.view_layer.update()
+        ranges = []
         if p['format'] == 'glb':
             ranges = [tuple(o.animation_data.action.frame_range) for o in objects if o.animation_data and o.animation_data.action]
             ranges += [(strip.frame_start, strip.frame_end) for o in objects if o.animation_data for track in o.animation_data.nla_tracks for strip in track.strips]
@@ -155,11 +165,20 @@ def import_model(p):
         report = {'import_id': p['import_id'], 'scene': scene.name, 'collection': collection.name,
                   'objects': len(objects), 'meshes': sum(o.type == 'MESH' for o in objects),
                   'parts': [{'id': o.get('steve_part_id', ''), 'instance': o.get('steve_instance', ''), 'object': o.name}
-                            for o in objects][:300], 'bounds': bounds(objects, scene.unit_settings.scale_length),
-                  'animation_imported': p['format'] == 'glb' and any(o.animation_data for o in objects)}
+                            for o in objects][:300], 'bounds': bounds(objects, scene.unit_settings.scale_length)}
         if p.get('motion'):
             report['motion'] = apply_motion({**p, 'operation': 'apply_motion'})
-            report['animation_imported'] = True
+            for key in ['animation_imported', 'geometry_source', 'motion_source', 'motion_summary']:
+                report[key] = report['motion'][key]
+        elif p['format'] == '3mf':
+            report.update(record_motion_status(collection, False, 'none',
+                'Geometry only. 3MF contains no animation; no STEVE motion payload was supplied.'))
+        elif ranges:
+            report.update(record_motion_status(collection, True, 'glb',
+                'Geometry and object animation imported from GLB.'))
+        else:
+            report.update(record_motion_status(collection, False, 'none',
+                'Geometry only. No object animation was found in the GLB.'))
         for obj in bpy.context.selected_objects:
             obj.select_set(False)
         for obj in objects:
@@ -282,14 +301,18 @@ def apply_motion(p):
         else:
             scene.frame_start = min(scene.frame_start, start)
             scene.frame_end = max(scene.frame_end, start+count)
+        scene.frame_set(start)
         collection['steve_motion'] = plan['name']
         collection['steve_motion_loop'] = plan['loop']
-        scene.frame_set(start)
-        return {'clip': plan['name'], 'start_frame': start, 'end_frame': start+count,
+        result = {'import_id': p['import_id'], 'collection': collection.name, 'scene': scene.name,
+                'clip': plan['name'], 'start_frame': start, 'end_frame': start+count,
                 'duration_s': plan['duration'], 'fps': fps, 'samples': count+1,
                 'loop_requested': plan['loop'], 'loop_behavior': 'Use Blender timeline playback range',
                 'easing': plan['easing'], 'easing_note': 'ease is sampled as smoothstep',
                 'animated_objects': sum(len(by_instance[c]) for c in joints)}
+        result.update(record_motion_status(collection, True, 'steve_payload',
+            f'STEVE motion payload imported: {plan["name"]} (frames {start}–{start+count}).'))
+        return result
     except Exception:
         for obj in objects:
             obj.animation_data_clear()

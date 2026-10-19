@@ -66,10 +66,21 @@
         </p>
         <button id="save" disabled>Save Blender copy</button>
       </section>
+      <section id="import-summary" aria-live="polite" hidden>
+        <p class="eyebrow">IMPORT RESULT</p>
+        <div class="import-heading">
+          <h2 id="import-collection"></h2>
+          <span id="import-motion" class="badge"></span>
+        </div>
+        <p id="import-detail" class="hint"></p>
+      </section>
       <section aria-live="polite">
         <p id="message">Loading connector…</p>
         <progress id="progress" max="1" value="0" hidden></progress>
-        <pre id="result"></pre>
+        <details>
+          <summary>Technical details</summary>
+          <pre id="result"></pre>
+        </details>
       </section>
       <footer>steve-blender-connector · 0.1.2</footer>
     </main>
