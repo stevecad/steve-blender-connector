@@ -74,6 +74,10 @@ Setup should print `"connected": true` and the active Blender scene. The extensi
 
 The panel’s document action runs directly from your click. STEVE may ask once before letting the panel send the open document. Select its “Don’t ask again” option if desired; that document-sharing permission is separate from action permissions. STEVE may take several minutes to prepare a document before returning a run or confirmation; the button stays disabled and the request is not repeated. Changing the open document/revision clears pasted motion metadata. Buttons stay disabled until a pending run ends.
 
+After a successful import, the result card shows the new collection name beside **Geometry only** or **Motion imported**. Its summary identifies whether motion came from a STEVE payload or a GLB; a STEVE payload also names the clip and frame range. A plain 3MF import explicitly says that no motion payload was supplied. Raw JSON remains available under **Technical details**.
+
+The result retains `animation_imported` and adds `geometry_source`, `motion_source` (`none`, `steve_payload`, or `glb`) and `motion_summary`. Blender also stores `steve_animation_imported`, `steve_motion_source` and `steve_motion_summary` on the collection. Adding motion later updates those collection properties and returns the same explicit status.
+
 All scenes remain in the same Blender session. “New scene” adds a scene in that session; it does not close the current `.blend`. Save a copy from the panel or save normally in Blender. The computer must stay awake, the connector must run, and Blender must have its MCP bridge started. When Blender closes, the connector stays online and reports Blender offline.
 
 For manual startup on macOS, double-click **start-connector.command**. Keep its Terminal window open and press **Ctrl-C** to stop. Open Blender separately. From a shell, `npm start` does the same thing.

@@ -38,6 +38,7 @@ function applyContext(c) {
   if (changed) {
     $('motion').value = '';
     $('result').textContent = '';
+    $('import-summary').hidden = true;
   }
   buttons();
 }
@@ -51,6 +52,23 @@ function showStatus(s) {
     : 'Open Blender and start the Blender Lab MCP extension.';
   buttons();
 }
+function showImportResult(result) {
+  if (!result.collection) return;
+  const known = typeof result.animation_imported === 'boolean';
+  $('import-collection').textContent = result.collection;
+  $('import-motion').textContent = known
+    ? result.animation_imported
+      ? 'Motion imported'
+      : 'Geometry only'
+    : 'Motion status unavailable';
+  $('import-motion').className = 'badge' + (result.animation_imported ? ' motion-imported' : '');
+  $('import-detail').textContent =
+    result.motion_summary ||
+    (known
+      ? 'This import did not report its motion source.'
+      : 'This connector did not report whether motion was imported.');
+  $('import-summary').hidden = false;
+}
 function showRun(run) {
   if (!active || active === 'pending' || active !== run.id) return;
   $('message').textContent =
@@ -63,6 +81,7 @@ function showRun(run) {
     active = null;
     if (run.result?.connected !== undefined) showStatus(run.result);
     if (run.result) $('result').textContent = JSON.stringify(run.result, null, 2);
+    if (run.state === 'succeeded' && run.result) showImportResult(run.result);
   }
   buttons();
 }
@@ -73,6 +92,7 @@ function start(name, inputs) {
   buttons();
   $('message').textContent = 'Waiting for STEVE to prepare the document or request confirmation…';
   $('result').textContent = '';
+  $('import-summary').hidden = true;
   // No await before run: the document is submitted in this click's activation.
   call('run', { action: name, inputs, note: 'Requested in the Blender panel' })
     .then((run) => {

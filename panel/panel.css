@@ -67,6 +67,23 @@ header p {
 .badge.online {
   color: #47a778;
 }
+.import-heading {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.import-heading h2 {
+  flex: 1 1 140px;
+  min-width: 0;
+  margin: 0;
+}
+.import-heading .badge {
+  margin-left: 0;
+}
+.badge.motion-imported {
+  color: #47a778;
+}
 section {
   background: var(--card);
   border: 1px solid var(--line);
